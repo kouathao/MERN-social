@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { signup } from "../auth";
+import { Link } from "react-router-dom";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 class Signup extends Component {
   constructor() {
@@ -10,6 +12,7 @@ class Signup extends Component {
       password: "",
       error: "",
       open: false,
+      alert: null,
     };
   }
 
@@ -46,6 +49,35 @@ class Signup extends Component {
           open: true,
         });
       }
+    });
+    this.signUpSuccess();
+  };
+
+  signUpSuccess() {
+    const getAlert = () => (
+      <SweetAlert
+        custom
+        showCloseButton
+        confirmBtnText="OK"
+        confirmBtnBsStyle="primary"
+        cancelBtnBsStyle="default"
+        customIcon="https://raw.githubusercontent.com/djorg83/react-bootstrap-sweetalert/master/demo/assets/thumbs-up.jpg"
+        title="Signup Success!"
+        onConfirm={this.hideAlert}
+      >
+        New Account is successfully created! Please{" "}
+        <Link to="/signin">Sign in</Link>
+      </SweetAlert>
+    );
+
+    this.setState({
+      alert: getAlert(),
+    });
+  }
+
+  hideAlert = () => {
+    this.setState({
+      alert: null,
     });
   };
 
@@ -109,9 +141,11 @@ class Signup extends Component {
           className="alert alert-primary"
           style={{ display: open ? "" : "none" }}
         >
-          New Account is successfully created! Please sign in
+          New Account is successfully created! Please{" "}
+          <Link to="/signin">Sign in</Link>
         </div>
         {this.signupForm(name, email, password)}
+        {this.state.alert}
       </div>
     );
   }
